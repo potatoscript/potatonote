@@ -1,4 +1,7 @@
-# 🚀 **Work Daily Report**  
+# 🚀 **Work Daily Report**   
+
+📌 [View Tabbed Menu in Wiki](https://github.com/heartlanguage2024/heartlanguage2024/wiki/TabbedMenu)
+
 ##### menu
 ## 📌 Table of Contents  
 | Date       | Title |

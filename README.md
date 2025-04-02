@@ -18,8 +18,6 @@
 <details>
 <summary><strong>🍓 **2025-04-02: Solving the workflow setting for the C++ project** 🔧🚀</strong></summary>
 
-**🍓 **2025-04-02: Solving the workflow setting for the C++ project** 🔧🚀**  
-
 ### **Issue**  
 The following workflow still encounters an error:  
 
@@ -204,7 +202,8 @@ msbuild JwwControl.vcxproj
 
 ###### ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project
 ###### [back](#menu) 
-## 🍓 2025-03-30: CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project 🔧🚀  
+<details>
+<summary><strong>🍓 2025-03-30: CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project 🔧🚀</strong></summary>
 
 ### **Overview**  
 This guide covers implementing **CI/CD** using **GitHub Actions** for a **C# WPF** project. We will:  
@@ -280,12 +279,13 @@ jobs:
       - name: Run Tests
         run: dotnet test --no-restore --verbosity normal
 ```
-
+</details>
 ---
 
 ###### github-actions-workflow-automation-and-deployment
 ###### [back](#menu)
-## 🍓 2025-04-01: GitHub Actions Workflow Automation and Deployment 🚀  
+<details>
+<summary><strong>🍓 2025-04-01: GitHub Actions Workflow Automation and Deployment 🚀  </strong></summary>
 
 ### **Automating the CI/CD Pipeline**  
 
@@ -351,6 +351,8 @@ By following these steps, we've successfully:
 🔗 **Next Steps:** Optimize CI/CD pipelines, add error logging, and refine deployment strategies.  
 
 📢 **Need help?** Open an issue or contribute to this repository! 🚀  
+
+</details>
 
 ---
 

@@ -1,5 +1,5 @@
 # 🚀 **CI/CD with GitHub Actions for C# WPF Project**  
-
+##### menu
 ## 📌 Table of Contents  
 | Date       | Title |
 |------------|------------------------------------------------|
@@ -7,10 +7,9 @@
 | 2025-04-01 | [GitHub Actions Workflow Automation and Deployment](#github-actions-workflow-automation-and-deployment) |
 
 ---
-
+###### ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project
+###### [back](#menu) 
 ## 🍓 2025-03-30: CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project 🔧🚀  
-
-##### ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project
 
 ### **Overview**  
 This guide covers implementing **CI/CD** using **GitHub Actions** for a **C# WPF** project. We will:  
@@ -89,9 +88,9 @@ jobs:
 
 ---
 
+###### github-actions-workflow-automation-and-deployment
+###### [back](#menu)
 ## 🍓 2025-04-01: GitHub Actions Workflow Automation and Deployment 🚀  
-
-##### github-actions-workflow-automation-and-deployment
 
 ### **Automating the CI/CD Pipeline**  
 

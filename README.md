@@ -194,7 +194,7 @@ After ensuring `v170Platforms` exists, run:
 msbuild /t:clean
 msbuild JwwControl.vcxproj
 ```
-🚀 **Let me know what files you see in `v170`, and I’ll guide you further!** 🚀
+
 
 ---
 

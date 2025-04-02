@@ -15,7 +15,10 @@
 
 ###### solving-the-workflow-setting-for-the-c-project
 ###### [back](#menu) 
-## 🍓 **2025-04-02: Solving the workflow setting for the C++ project** 🔧🚀  
+<details>
+<summary><strong>🍓 **2025-04-02: Solving the workflow setting for the C++ project** 🔧🚀</strong></summary>
+
+**🍓 **2025-04-02: Solving the workflow setting for the C++ project** 🔧🚀**  
 
 ### **Issue**  
 The following workflow still encounters an error:  
@@ -195,7 +198,7 @@ After ensuring `v170Platforms` exists, run:
 msbuild /t:clean
 msbuild JwwControl.vcxproj
 ```
-
+</details>
 
 ---
 

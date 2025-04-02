@@ -1,12 +1,109 @@
-# 🚀 **CI/CD with GitHub Actions for C# WPF Project**  
+# 🚀 **Work Daily Report**  
 ##### menu
 ## 📌 Table of Contents  
 | Date       | Title |
 |------------|------------------------------------------------|
 | 2025-03-30 | [CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project](#ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project) |
 | 2025-04-01 | [GitHub Actions Workflow Automation and Deployment](#github-actions-workflow-automation-and-deployment) |
+| 2025-04-02 | [Solving the workflow setting for the C++ project](#solving-the-workflow-setting-for-the-c-project) |
 
 ---
+
+###### solving-the-workflow-setting-for-the-c-project
+###### [back](#menu) 
+## 🍓 **2025-04-02: Solving the workflow setting for the C++ project** 🔧🚀  
+
+### **Issue**  
+The following workflow still encounters an error:  
+
+```
+The error is caused by missing Visual Studio C++ build components, specifically the Microsoft.Cpp.Default.props file. Your workflow attempts to install Visual Studio Build Tools using Chocolatey but does not correctly configure the environment to use the installed tools.
+```
+
+### **Workflow Configuration**  
+```yaml
+name: Potato Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest  
+
+    strategy:
+      matrix:
+        dotnet-version: [8.0]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Install Visual Studio Build Tools
+        run: |
+          choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VC --includeRecommended"
+          choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --includeRecommended"
+
+      - name: Initialize Visual Studio Environment Variables
+        run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
+
+      - name: Clean MSBuild Cache
+        run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:Clean Fw.sln
+        shell: pwsh
+
+      - name: Restore .NET dependencies
+        run: dotnet restore
+
+      - name: Restore dependencies (MSBuild)
+        run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:restore /p:Configuration=Release Fw.sln
+        shell: pwsh
+
+      - name: Build the project
+        run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /p:Configuration=Release Fw.sln
+        shell: pwsh
+
+      - name: Run tests
+        run: dotnet test
+
+      - name: Set up Git credentials
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Fetch and checkout production branch
+        run: |
+          git fetch origin
+          git checkout production
+
+      - name: Merge main into production
+        run: |
+          git pull origin production
+
+      - name: Push changes to production
+        run: |
+          git push origin production
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+---
+
+---
+
 ###### ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project
 ###### [back](#menu) 
 ## 🍓 2025-03-30: CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project 🔧🚀  

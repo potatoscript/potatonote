@@ -34,6 +34,7 @@ on:
 
 jobs:
   build:
+    # ✅ # Use Windows since you're working with Visual Studio projects
     runs-on: windows-latest  
 
     strategy:
@@ -44,60 +45,84 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # ✅ Set up .NET SDK (No need for VS installation)
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
+      # Install Visual Studio Build Tools
       - name: Install Visual Studio Build Tools
         run: |
           choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VC --includeRecommended"
           choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --includeRecommended"
 
+      # Initialize Visual Studio Environment Variables
       - name: Initialize Visual Studio Environment Variables
         run: |
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
 
+
+      # Clean the solution (optional)
       - name: Clean MSBuild Cache
         run: |
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:Clean Fw.sln
         shell: pwsh
 
+      # ✅ Restore dependencies
       - name: Restore .NET dependencies
         run: dotnet restore
 
+      # Build solution using MSBuild (required for C++ projects) ✖
+      #- name: Build solution using MSBuild
+      #  run: |
+      #    msbuild D:\a\FwCAD\FwCAD\Fw.sln /p:Configuration=Release
+
+      # ✅ Restore dependencies using MSBuild (No installation needed)
       - name: Restore dependencies (MSBuild)
         run: |
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:restore /p:Configuration=Release Fw.sln
         shell: pwsh
 
+      # ✅ Build the project using preinstalled MSBuild
       - name: Build the project
         run: |
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /p:Configuration=Release Fw.sln
         shell: pwsh
+      
+      # Build the solution ✖
+      #- name: Build solution
+      #  run: dotnet build
 
+      # ✅ Run tests (if applicable)
       - name: Run tests
         run: dotnet test
 
+
+      # Set up Git credentials
       - name: Set up Git credentials
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
+      # Fetch and checkout production branch
       - name: Fetch and checkout production branch
         run: |
           git fetch origin
           git checkout production
 
+      # Merge main into production
       - name: Merge main into production
         run: |
           git pull origin production
 
+      # Push changes to production
       - name: Push changes to production
         run: |
           git push origin production
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 ```
 
 ---

@@ -280,6 +280,7 @@ jobs:
         run: dotnet test --no-restore --verbosity normal
 ```
 </details>
+
 ---
 
 ###### github-actions-workflow-automation-and-deployment
@@ -358,7 +359,8 @@ By following these steps, we've successfully:
 
 ###### bat-auto-runner
 ###### [back](#menu)
-## 🍓 2025-03-28: Automating Service Startup on Windows Boot: Creating `start_services.bat` 🚀  
+<details>
+<summary><strong>🍓 2025-03-28: Automating Service Startup on Windows Boot: Creating `start_services.bat` 🚀 </strong></summary>
 
 ## 📌 Introduction
 Managing multiple services manually every time you start your Windows system can be tedious. This tutorial will guide you through creating a batch script (`start_services.bat`) that automates the startup of **Jenkins**, **GitHub Actions Runner**, **ngrok**, and **Git operations**.
@@ -498,5 +500,7 @@ To make this script run every time Windows starts, follow these steps:
 2. Copy the shortcut into the opened folder.
 
 Now, every time Windows starts, your script will execute automatically! 🎉
+
+</details>
 
 ---

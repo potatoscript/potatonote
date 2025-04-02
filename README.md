@@ -128,6 +128,74 @@ jobs:
 
 ```
 
+## **🔍 Step 1: Verify Your Installed Components**
+1. **Open Visual Studio Installer**  
+   - Press `Win + S`, search for **Visual Studio Installer**, and open it.  
+   - Click **Modify** on **Visual Studio 2022 Community**.  
+
+2. **Ensure the Following Are Installed:**  
+   In the **Workloads** tab:  
+   ✅ `Desktop development with C++` (if not checked, enable it).  
+
+   In the **Individual Components** tab, **check the following** under “Compilers, build tools, and runtimes”:  
+   - ✅ **MSVC v143 - VS 2022 C++ x64/x86 build tools**  
+   - ✅ **Windows 10 SDK (latest installed)**  
+   - ✅ **Windows 11 SDK (latest installed)**  
+   - ✅ **C++ CMake tools for Windows**  
+   - ✅ **C++ ATL for v143**  
+   - ✅ **C++ MFC for v143**  
+   - ✅ **C++ CMake tools for Windows**  
+
+   📌 **Make sure these are installed before proceeding.** Click **Modify** to install missing components.
+
+---
+
+## **🔍 Step 2: Manually Check Installed Files**
+1. Open **File Explorer** and go to:
+   ```
+   C:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\
+   ```
+   You should see `v150`, `v160`, and `v170`, but **not `v170Platforms`**.
+
+2. Check inside the `v170` folder:
+   ```
+   C:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\
+   ```
+   - Do you see `Microsoft.Cpp.Default.props`?  
+   - Do you see `BuildCustomizations`?  
+
+   📌 **Let me know what files exist there!**
+
+---
+
+## **🔧 Step 3: Manually Copy Missing Files**
+If **`v170Platforms`** is still missing after reinstalling the components:  
+
+### **1️⃣ Copy from an Existing Version**
+Check if `v160Platforms` or `v150Platforms` exist:  
+```
+C:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v160Platforms\
+C:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v150Platforms\
+```
+If **either exists**, copy the entire folder and rename it to `v170Platforms`.
+
+### **2️⃣ Reinstall VS Build Tools (Last Resort)**
+If **you do not have `v150Platforms` or `v160Platforms`**, reinstall VS Build Tools:  
+1. **Download Visual Studio Build Tools** from:  
+   👉 [https://visualstudio.microsoft.com/visual-cpp-build-tools/](https://visualstudio.microsoft.com/visual-cpp-build-tools/)  
+2. **Run the installer**, select **C++ Desktop Development**, and install all required components.  
+3. **Restart your computer** and check if `v170Platforms` appears.  
+
+---
+
+## **📢 Final Steps**
+After ensuring `v170Platforms` exists, run:
+```sh
+msbuild /t:clean
+msbuild JwwControl.vcxproj
+```
+🚀 **Let me know what files you see in `v170`, and I’ll guide you further!** 🚀
+
 ---
 
 ###### ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project

@@ -6,6 +6,7 @@
 ## 📌 Table of Contents  
 | Date       | Title |
 |------------|------------------------------------------------|
+| 2025-03-28 | [Create the bat file to auto start the runner](#bat-auto-runner) |
 | 2025-03-30 | [CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project](#ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project) |
 | 2025-04-01 | [GitHub Actions Workflow Automation and Deployment](#github-actions-workflow-automation-and-deployment) |
 | 2025-04-02 | [Solving the workflow setting for the C++ project](#solving-the-workflow-setting-for-the-c-project) |
@@ -350,4 +351,147 @@ By following these steps, we've successfully:
 
 ---
 
-This is your **complete working README** with **detailed steps and working workflows**! 🎯 Let me know if you need any modifications. 🚀
+###### bat-auto-runner
+###### [back](#menu)
+## 🍓 2025-03-28: Automating Service Startup on Windows Boot: Creating `start_services.bat` 🚀  
+
+## 📌 Introduction
+Managing multiple services manually every time you start your Windows system can be tedious. This tutorial will guide you through creating a batch script (`start_services.bat`) that automates the startup of **Jenkins**, **GitHub Actions Runner**, **ngrok**, and **Git operations**.
+
+By the end of this tutorial, your system will automatically:
+- Start Jenkins in the background.
+- Ensure GitHub Actions Runner is running.
+- Start ngrok and update the workflow with the new public URL.
+- Pull the latest code from your Git repository and push any necessary changes.
+
+---
+
+## 🛠️ Prerequisites
+Before proceeding, ensure you have the following installed and configured:
+1. **Java** (for Jenkins)
+2. **Jenkins** (`jenkins.war` should be placed in a known directory)
+3. **GitHub Actions Runner** (already configured in `C:\Projects\actions-runner`)
+4. **ngrok** (installed and accessible via command line)
+5. **Git** (configured with SSH or HTTPS authentication)
+
+---
+
+## 📝 Creating the `start_services.bat` Script
+Create a new file named `start_services.bat` and paste the following script:
+
+```bat
+@echo off
+echo Starting Jenkins...
+
+:: Start Jenkins in the background
+start /B java -jar jenkins.war --httpPort=8080 --httpListenAddress=0.0.0.0
+echo Jenkins started.
+
+:: Wait a few seconds for Jenkins to start
+timeout /t 5
+
+:: Check if Actions Runner is running
+tasklist | find /i "Runner.Listener.exe" > nul
+if %errorlevel% neq 0 (
+    echo GitHub Actions Runner is not running. Starting now...
+    cd /d "C:\Projects\actions-runner"
+    start /B run.cmd
+) else (
+    echo GitHub Actions Runner is already running.
+)
+
+:: Start ngrok and capture the public URL
+echo Starting ngrok...
+start /B ngrok http 8080 > nul 2>&1
+
+:: Wait for ngrok to initialize
+timeout /t 5
+
+:: Fetch the ngrok URL using PowerShell
+for /f "delims=" %%A in ('powershell -Command "(Invoke-RestMethod -Uri 'http://127.0.0.1:4040/api/tunnels').tunnels[0].public_url"') do set NGROK_URL=%%A
+
+:: Trim the quotation marks from the URL
+set NGROK_URL=%NGROK_URL:"=%
+
+echo ngrok URL: %NGROK_URL%
+
+:: Update the ngrok URL in `potato.yml`
+powershell -Command "(Get-Content C:\Projects\ConvertImageToBase64\.github\workflows\potato.yml) -replace 'https://.*?\.ngrok-free\.app', '%NGROK_URL%' | Set-Content C:\Projects\ConvertImageToBase64\.github\workflows\potato.yml"
+
+:: Pull the latest changes from origin and merge with local changes
+echo Pulling latest changes from origin main...
+cd /d C:\Projects\ConvertImageToBase64
+git fetch origin
+git pull origin main
+
+:: Check if there was an error while pulling (e.g., merge conflicts)
+if %errorlevel% neq 0 (
+    echo There was an error while pulling from the remote repository. Please resolve any conflicts and try again.
+    pause
+    exit /b
+)
+
+:: Check if a merge is in progress (MERGE_HEAD exists)
+if exist .git\MERGE_HEAD (
+    echo Merge is in progress. Committing the merge...
+    git commit --no-edit
+)
+
+:: Check for uncommitted changes (before merge or after conflict resolution)
+git diff --exit-code > nul
+if %errorlevel% neq 0 (
+    echo Uncommitted changes detected. Committing changes...
+    git add .
+    git commit -m "Auto-commit changes"
+)
+
+:: Push the merged changes to GitHub
+git push origin main
+
+echo All services are running. The GitHub Actions workflow has been updated.
+pause
+```
+
+---
+
+## 🔥 Understanding the Script
+Here’s a breakdown of what this script does:
+
+### **1. Start Jenkins**
+- Runs Jenkins in the background on port 8080.
+- Uses `start /B` to keep it running without opening a separate window.
+
+### **2. Ensure GitHub Actions Runner is Running**
+- Checks if `Runner.Listener.exe` is running.
+- If not, navigates to `C:\Projects\actions-runner` and starts it.
+
+### **3. Start ngrok & Capture Public URL**
+- Runs ngrok in the background.
+- Waits for initialization and fetches the ngrok public URL.
+- Uses PowerShell to parse the JSON response and extract the URL.
+
+### **4. Update GitHub Actions Workflow with the New ngrok URL**
+- Updates `potato.yml` in the GitHub repository.
+- Uses PowerShell to replace the old ngrok URL with the new one.
+
+### **5. Synchronize with GitHub Repository**
+- Pulls the latest changes from `origin/main`.
+- Handles merge conflicts if any.
+- Commits and pushes changes automatically.
+
+---
+
+## 🚀 Automating the Script Execution on Windows Startup
+To make this script run every time Windows starts, follow these steps:
+
+### **Step 1: Create a Shortcut**
+1. Right-click on `start_services.bat` and select **Create Shortcut**.
+2. Rename the shortcut to something like **Start Services**.
+
+### **Step 2: Add to Startup Folder**
+1. Press `Win + R`, type `shell:startup`, and hit **Enter**.
+2. Copy the shortcut into the opened folder.
+
+Now, every time Windows starts, your script will execute automatically! 🎉
+
+---

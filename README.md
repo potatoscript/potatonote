@@ -1,4 +1,4 @@
-## **2025-03-30: CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project** 🔧🚀
+# 🍓**2025-03-30: CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project** 🔧🚀
 
 ### **Overview**  
 This report covers the implementation of **CI/CD** using **GitHub Actions** for a C# WPF project. We explore the setup of a self-hosted runner, modifications to GitHub Actions workflows, unit tests creation, deployment strategies, and more. These steps ensure continuous integration and deployment of your application.
@@ -235,7 +235,7 @@ Here's a **second-day report** following the structure you're aiming for:
 
 ---
 
-## **2025-04-01: GitHub Actions Workflow Automation and Deployment** 🚀
+# 🍓**2025-04-01: GitHub Actions Workflow Automation and Deployment** 🚀
 
 ### **Automating the CI/CD Pipeline with GitHub Actions** 🔧
 
@@ -413,6 +413,120 @@ jobs:
         run: |
           choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --includeRecommended"
 
+
+      # ✅ Restore dependencies
+      - name: Restore .NET dependencies
+        run: dotnet restore
+
+      # Build solution using MSBuild (required for C++ projects) ✖
+      #- name: Build solution using MSBuild
+      #  run: |
+      #    msbuild D:\a\FwCAD\FwCAD\Fw.sln /p:Configuration=Release
+
+      # ✅ Restore dependencies using MSBuild (No installation needed)
+      - name: Restore dependencies (MSBuild)
+        run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:restore /p:Configuration=Release Fw.sln
+        shell: pwsh
+
+      # ✅ Build the project using preinstalled MSBuild
+      - name: Build the project
+        run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /p:Configuration=Release Fw.sln
+        shell: pwsh
+      
+      # Build the solution ✖
+      #- name: Build solution
+      #  run: dotnet build
+
+      # ✅ Run tests (if applicable)
+      - name: Run tests
+        run: dotnet test
+
+
+      # Set up Git credentials
+      - name: Set up Git credentials
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      # Fetch and checkout production branch
+      - name: Fetch and checkout production branch
+        run: |
+          git fetch origin
+          git checkout production
+
+      # Merge main into production
+      - name: Merge main into production
+        run: |
+          git pull origin production
+
+      # Push changes to production
+      - name: Push changes to production
+        run: |
+          git push origin production
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+```
+
+---
+
+# 🍓**2025-04-02: Solving the workflow setting for the C++ project** 🔧🚀
+
+### The following flow still got error of 
+
+```
+The error is caused by missing Visual Studio C++ build components, specifically the Microsoft.Cpp.Default.props file. Your workflow attempts to install Visual Studio Build Tools using Chocolatey but does not correctly configure the environment to use the installed tools.
+```
+
+```yml
+name: Potato Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    # ✅ # Use Windows since you're working with Visual Studio projects
+    runs-on: windows-latest  
+
+    strategy:
+      matrix:
+        dotnet-version: [8.0]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # ✅ Set up .NET SDK (No need for VS installation)
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      # Install Visual Studio Build Tools
+      - name: Install Visual Studio Build Tools
+        run: |
+          choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VC --includeRecommended"
+          choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.MSBuildTools --includeRecommended"
+
+      # Initialize Visual Studio Environment Variables
+      - name: Initialize Visual Studio Environment Variables
+        run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat"
+
+
+      # Clean the solution (optional)
+      - name: Clean MSBuild Cache
+        run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:Clean Fw.sln
+        shell: pwsh
 
       # ✅ Restore dependencies
       - name: Restore .NET dependencies

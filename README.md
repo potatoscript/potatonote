@@ -102,8 +102,6 @@ jobs:
 
 ---
 
----
-
 ###### ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project
 ###### [back](#menu) 
 ## 🍓 2025-03-30: CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project 🔧🚀  

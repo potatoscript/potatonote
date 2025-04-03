@@ -19,6 +19,58 @@
 <details>
 <summary><strong>🍓 **2025-04-03: Setup and run test on action-runner** 🔧🚀</strong></summary>
 
+# Fixing VCTargetsPath Error in Visual Studio
+
+## Issue Description
+If you encounter the following error when building your project in Visual Studio:
+
+```
+The imported project "C:\Microsoft\VC\v170\Microsoft.Cpp.Default.props" was not found.
+Confirm that the expression in the Import declaration "$(VCTargetsPath)\Microsoft.Cpp.Default.props",
+which evaluated to "C:\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.Cpp.Default.props",
+is correct, and that the file exists on disk.
+```
+
+This typically happens because the `VCTargetsPath` environment variable is incorrectly set or missing a trailing backslash (`\`).
+
+### **Why is `VCTargetsPath` Important in a WPF Project?**  
+Even though WPF primarily uses C# and XAML, you might have **C++/CLI (Common Language Infrastructure) components** in your WPF project. This happens if:  
+1. **Your WPF project references a C++/CLI project** (e.g., for performance reasons or legacy code).  
+2. **You are using a native C++ library with P/Invoke or interop** (e.g., Open CASCADE in your case).  
+3. **Your solution includes both C# and C++ projects**, such as a mixed-language setup.
+
+When you build your project, MSBuild relies on `VCTargetsPath` to locate these C++ build definitions. If the path is incorrect or missing, Visual Studio **cannot find the necessary build scripts**, leading to errors like:  
+```
+The imported project "C:\Microsoft\VC\v170\Microsoft.Cpp.Default.props" was not found.
+```
+
+## Solution: Set `VCTargetsPath` Correctly
+To fix this issue, ensure that `VCTargetsPath` is set correctly in the system environment variables.
+
+### Steps to Fix:
+1. Open **Run** (`Win + R`), type `sysdm.cpl`, and press **Enter**.
+2. Go to the **Advanced** tab and click on **Environment Variables**.
+3. Under **System Variables**, look for `VCTargetsPath`:
+   - If it exists, **edit it** and ensure it is set to:
+     ```
+     C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\
+     ```
+     (Note the trailing `\` at the end.)
+   - If it doesn’t exist, **create a new system variable** with the above value.
+4. Click **OK** and restart your computer.
+
+### Additional Steps if the Issue Persists:
+- Delete the `.vs`, `bin`, and `obj` folders in your project directory.
+- Open Visual Studio and **Rebuild Solution**.
+- If the error still occurs, manually edit `JwwControl.vcxproj` and ensure that all references to `VCTargetsPath` are correct.
+
+## Summary
+- Ensure `VCTargetsPath` ends with `\`.
+- Update the environment variable if necessary.
+- Clean and rebuild the project in Visual Studio.
+
+
+
 </details>
 ---
 

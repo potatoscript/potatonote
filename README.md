@@ -19,7 +19,7 @@
 <details>
 <summary><strong>🍓 **2025-04-03: Setup and run test on action-runner** 🔧🚀</strong></summary>
 
-# Fixing VCTargetsPath Error in Visual Studio
+# 🥔Fixing VCTargetsPath Error in Visual Studio
 
 ## Issue Description
 If you encounter the following error when building your project in Visual Studio:
@@ -71,7 +71,7 @@ To fix this issue, ensure that `VCTargetsPath` is set correctly in the system en
 
 ---
 
-# Run the workflow from localself-hosted 
+# 🥔Run the workflow from localself-hosted 
 
 ```yml
 name: Potato Workflow

@@ -6,11 +6,20 @@
 ## 📌 Table of Contents  
 | Date       | Title |
 |------------|------------------------------------------------|
-| 2025-03-28 | [Create the bat file to auto start the runner](#bat-auto-runner) |
-| 2025-03-30 | [CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project](#ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project) |
-| 2025-04-01 | [GitHub Actions Workflow Automation and Deployment](#github-actions-workflow-automation-and-deployment) |
+| 2025-04-03 | [Setup and run test on action-runner](#setup-and-run-test-on-action-runner) |
 | 2025-04-02 | [Solving the workflow setting for the C++ project](#solving-the-workflow-setting-for-the-c-project) |
+| 2025-04-01 | [GitHub Actions Workflow Automation and Deployment](#github-actions-workflow-automation-and-deployment) |
+| 2025-03-30 | [CI/CD with GitHub Actions: Setting Up Self-Hosted Runner for C# WPF Project](#ci-cd-with-github-actions-setting-up-self-hosted-runner-for-c-wpf-project) |
+| 2025-03-28 | [Create the bat file to auto start the runner](#bat-auto-runner) |
 
+---
+
+###### setup-and-run-test-on-action-runner
+###### [back](#menu) 
+<details>
+<summary><strong>🍓 **2025-04-03: Setup and run test on action-runner** 🔧🚀</strong></summary>
+
+</details>
 ---
 
 ###### solving-the-workflow-setting-for-the-c-project

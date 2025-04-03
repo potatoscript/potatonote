@@ -69,7 +69,108 @@ To fix this issue, ensure that `VCTargetsPath` is set correctly in the system en
 - Update the environment variable if necessary.
 - Clean and rebuild the project in Visual Studio.
 
+---
 
+### **📌 How to Install Visual Studio Build Tools on Your Self-Hosted Runner**
+Since you're using a **self-hosted GitHub Actions runner**, you need to install **Visual Studio Build Tools** manually on your runner machine.
+
+---
+
+## **🚀 Step-by-Step Installation**
+Follow these steps to install **Visual Studio Build Tools, MFC, and MSBuild** on your **runner machine**.
+
+### **🔹 Step 1: Open PowerShell as Administrator**
+1. On your **runner machine**, open **PowerShell**.
+2. Run it as **Administrator**.
+
+---
+
+### **🔹 Step 2: Install Chocolatey**
+If **Chocolatey** is not installed, install it with:
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+```
+After installation, **restart PowerShell**.
+
+---
+
+### **🔹 Step 3: Install Visual Studio Build Tools and Required Components**
+Run these **one by one** in PowerShell **(as Admin)**:
+
+#### **1️⃣ Install Visual Studio Build Tools**
+```powershell
+choco install visualstudio2022buildtools --force --params "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+```
+
+#### **2️⃣ Install MFC Components**
+```powershell
+choco install visualstudio2022buildtools --force --params "--add Microsoft.VisualStudio.Component.VC.ATL --add Microsoft.VisualStudio.Component.VC.MFC --includeRecommended"
+```
+
+#### **3️⃣ Install MSBuild Tools**
+```powershell
+choco install visualstudio2022buildtools --force --params "--add Microsoft.VisualStudio.Workload.MSBuildTools --includeRecommended"
+```
+
+💡 **This will take a while!** Let the installation complete.
+
+---
+
+### **🔹 Step 4: Restart the Runner Machine**
+After installation, restart your runner machine to apply changes.
+
+---
+
+### **🔹 Step 5: Verify Installation**
+Check if **MSBuild** and **VC++ Tools** are installed:
+
+1️⃣ **Check MSBuild Path**  
+```powershell
+Get-Command msbuild
+```
+If installed, it should return something like:
+```
+CommandType     Name      Version    Source
+-----------     ----      -------    ------
+Application     msbuild.exe 17.4.2   C:\Program Files\Microsoft Visual Studio\2022\BuildTools\MSBuild\Current\Bin\MSBuild.exe
+```
+
+2️⃣ **Check VCTools Installation**
+```powershell
+$env:VCToolsInstallDir
+```
+If the output is empty, set it manually:
+```powershell
+[System.Environment]::SetEnvironmentVariable("VCToolsInstallDir", "C:\Program Files\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.36.32532", [System.EnvironmentVariableTarget]::Machine)
+```
+(Change `14.36.32532` to your installed version.)
+
+---
+
+### **🔹 Step 6: Restart Your GitHub Runner**
+Once everything is installed, restart your runner:
+
+1. **Stop the runner**  
+   Go to the folder where your runner is installed and run:
+   ```powershell
+   ./svc.sh stop
+   ```
+
+2. **Start the runner**  
+   ```powershell
+   ./run.sh
+   ```
+
+---
+
+## **🔄 Summary**
+✅ Install **Chocolatey**  
+✅ Install **Visual Studio Build Tools**  
+✅ Install **MFC and MSBuild**  
+✅ Restart your machine and runner  
+✅ Verify installation with **MSBuild and VCTools**  
+
+After this, **rerun your GitHub Actions workflow** 🚀 Let me know if you get any errors!
 
 </details>
 ---

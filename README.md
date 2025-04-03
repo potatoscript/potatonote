@@ -71,7 +71,144 @@ To fix this issue, ensure that `VCTargetsPath` is set correctly in the system en
 
 ---
 
-### **📌 How to Install Visual Studio Build Tools on Your Self-Hosted Runner**
+# Run the workflow from localself-hosted 
+
+```yml
+name: Potato Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    # ✅ # Use Windows since you're working with Visual Studio projects
+    runs-on: [self-hosted, windows]  # Ensure this is set to your self-hosted runner.
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      # Cache Visual Studio Build Tools installer
+      - name: Cache Visual Studio Build Tools
+        uses: actions/cache@v3
+        with:
+          path: C:\path\to\visualstudio_installer_cache
+          key: ${{ runner.os }}-vs_installer-${{ hashFiles('**/vs_installer.exe') }}
+          
+
+
+      # Initialize Visual Studio Environment Variables
+      - name: Initialize Visual Studio Environment Variables
+        run: |
+          & "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
+
+
+      - name: Set VCTargetsPath
+        run: |
+          echo "VCTargetsPath=C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+
+
+      # Clean the solution (optional)
+      
+      - name: Clean Solution
+        shell: cmd
+        run: |
+          CALL "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" /t:Clean Fw.sln
+
+      # ✅ Restore dependencies
+      - name: Restore .NET dependencies
+        run: dotnet restore
+
+      # Build solution using MSBuild (required for C++ projects) ✖
+      #- name: Build solution using MSBuild
+      #  run: |
+      #    msbuild D:\a\FwCAD\FwCAD\Fw.sln /p:Configuration=Release
+
+      # ✅ Restore dependencies using MSBuild (No installation needed)
+      #- name: Restore dependencies (MSBuild)
+      #  run: |
+      #    & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /t:restore /p:Configuration=Release Fw.sln
+      #  shell: pwsh
+
+      # ✅ Build the project using preinstalled MSBuild
+      #- name: Build the project
+      #  run: |
+      #    & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" /p:Configuration=Release Fw.sln
+      #  shell: pwsh
+      
+      # Build the solution ✖
+      #- name: Build solution
+      #  run: dotnet build
+
+
+      - name: Initialize Visual Studio Environment Variables
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
+        shell: cmd
+
+      - name: Build Solution
+        run: |
+          "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" /p:Configuration=Release Fw.sln
+        shell: cmd
+
+      #- name: Build with MSBuild
+      #  run: |
+      #    "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe" FwCAD.sln /p:VCTargetsPath="C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Microsoft\\VC\\v170\\"
+      #  shell: cmd  # Use cmd for MSBuild command
+
+
+      # ✅ Run tests (if applicable)
+      - name: Run tests
+        run: dotnet test
+
+
+      # Set up Git credentials
+      - name: Set up Git credentials
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      # Fetch and checkout production branch
+      - name: Fetch and checkout production branch
+        run: |
+          git fetch origin
+          git checkout production
+
+      # Merge main into production
+      - name: Merge main into production
+        run: |
+          git pull origin production
+
+      # Push changes to production
+      - name: Push changes to production
+        run: |
+          git push origin production
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+```
+
+## If you got error of
+```
+Run dotnet test
+  復元対象のプロジェクトを決定しています...
+  復元対象のすべてのプロジェクトは最新です。
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(515,5): warning MSB8003: VCToolsInstallDir プロパティが定義されていません。一部のビルド ツールが見つからない可能性があります。 [C:\Projects\actions-runner\potato_work\FwCAD\FwCAD\OCControl\OCControl.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(500,5): error MSB8041: このプロジェクトには、MFC のライブラリが必要です。使用されているツールセットとアーキテクチャについては、Visual Studio インストーラー (個々のコンポーネント タブ) からインストールします。 [C:\Projects\actions-runner\potato_work\FwCAD\FwCAD\JwwControl\JwwControl.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(203,5): error MSB4018: "GetOutOfDateItems" タスクが予期せずに失敗しました。 [C:\Projects\actions-runner\potato_work\FwCAD\FwCAD\OCControl\OCControl.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(203,5): error MSB4018: System.TypeLoadException: Could not load type 'Microsoft.Build.Utilities.CanonicalTrackedOutputFiles' from assembly 'Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'. [C:\Projects\actions-runner\potato_work\FwCAD\FwCAD\OCControl\OCControl.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(203,5): error MSB4018:    at Microsoft.Build.CPPTasks.GetOutOfDateItems.Execute() [C:\Projects\actions-runner\potato_work\FwCAD\FwCAD\OCControl\OCControl.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(203,5): error MSB4018:    at Microsoft.Build.BackEnd.TaskExecutionHost.Execute() [C:\Projects\actions-runner\potato_work\FwCAD\FwCAD\OCControl\OCControl.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(203,5): error MSB4018:    at Microsoft.Build.BackEnd.TaskBuilder.ExecuteInstantiatedTask(TaskExecutionHost taskExecutionHost, TaskLoggingContext taskLoggingContext, TaskHost taskHost, ItemBucket bucket, TaskExecutionMode howToExecuteTask) [C:\Projects\actions-runner\potato_work\FwCAD\FwCAD\OCControl\OCControl.vcxproj]
+Error: Process completed with exit code 1.
+```
+
+### **📌 Install Visual Studio Build Tools on Your Self-Hosted Runner to solve the above issues**
 Since you're using a **self-hosted GitHub Actions runner**, you need to install **Visual Studio Build Tools** manually on your runner machine.
 
 ---

@@ -307,6 +307,22 @@ Once everything is installed, restart your runner:
 ✅ Restart your machine and runner  
 ✅ Verify installation with **MSBuild and VCTools**  
 
+
+### **🔹 Add MSBuild to the System PATH**
+Since the `msbuild` command is not recognized, we need to add it to the **system PATH**.
+
+1️⃣ **Run this command in PowerShell (Administrator mode)**:
+```powershell
+[System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin", [System.EnvironmentVariableTarget]::Machine)
+```
+
+2️⃣ **Restart PowerShell** and **GitHub Runner**.
+
+3️⃣ **Verify MSBuild** by running:
+```powershell
+msbuild -version
+```
+
 After this, **rerun your GitHub Actions workflow** 🚀 Let me know if you get any errors!
 
 </details>

@@ -1,7 +1,6 @@
 # 🚀 **Work Daily Report**   
 
 ##### menu
-## 📌 Table of Contents  
 | Date       | Title |
 |------------|------------------------------------------------|
 | 2025-04-04 | [Test Execution Still Failure in GitHub Actions](https://github.com/heartlanguage2024/heartlanguage2024/wiki/20250404) |

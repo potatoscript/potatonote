@@ -6,6 +6,7 @@
 ## 📌 Table of Contents  
 | Date       | Title |
 |------------|------------------------------------------------|
+| 2025-04-04 | [Test Execution Still Failure in GitHub Actions](https://github.com/heartlanguage2024/heartlanguage2024/wiki/20250404) |
 | 2025-04-03 | [Setup and run test on action-runner](#setup-and-run-test-on-action-runner) |
 | 2025-04-02 | [Solving the workflow setting for the C++ project](#solving-the-workflow-setting-for-the-c-project) |
 | 2025-04-01 | [GitHub Actions Workflow Automation and Deployment](#github-actions-workflow-automation-and-deployment) |

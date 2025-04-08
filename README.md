@@ -14,6 +14,17 @@
 
 ---
 
+### Merge main into production and solve conflict 
+```bash
+git checkout production
+git merge origin/main
+# You'll see conflict markers <<<<<< HEAD etc. in the file
+# Manually fix the conflicts in .github/workflows/main.yml
+git add .github/workflows/main.yml
+git commit -m "Resolve workflow conflict"
+```
+
+
 ###### setup-and-run-test-on-action-runner
 ###### [back](#menu) 
 <details>

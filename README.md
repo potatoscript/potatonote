@@ -3,6 +3,7 @@
 ##### menu
 | Date       | Title |
 |------------|------------------------------------------------|
+| 2025-04-10 | [Importing CAD JSON Data into SQLite with Model Defaults](https://github.com/heartlanguage2024/heartlanguage2024/wiki/20250410) |
 | 2025-04-09 | [Reading a JWW CAD File and Saving as JSON in a WPF Application](https://github.com/heartlanguage2024/heartlanguage2024/wiki/20250409) |
 | 2025-04-08 | [GitHub Actions Self-Hosted Runner Hangs During Test Execution (SQLite Access)](https://github.com/heartlanguage2024/heartlanguage2024/wiki/20250408) |
 | 2025-04-07 | [Using NUnit for WPF Tests in GitHub Actions](https://github.com/heartlanguage2024/heartlanguage2024/wiki/20250407) |

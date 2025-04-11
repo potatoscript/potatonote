@@ -68,4 +68,80 @@ git push -u origin feature/your-feature-name
 
 ---
 
+## 🎯 Why Both Appear?
+
+When you:
+- Create an **issue** and add it to the project → it appears as one item.
+- Create a **pull request** and also add it to the same project (or use "Closes #issue") → the PR is a **separate card**.
+
+They appear separately **even if the PR closes the issue**.
+
+---
+
+## ✅ How to Combine Them or Manage Cleaner?
+
+There are a few strategies to clean this up:
+
+---
+
+### **Option 1: Use Only Issues in the Project**
+- Only track **issues** in your project.
+- Don’t add PRs directly to the board.
+- Let PRs just be linked to their corresponding issue (e.g., using `Closes #123`).
+- When the PR is merged → issue is closed → project shows issue as done.
+
+🔁 **Auto-updates** happen based on the issue status.
+
+---
+
+### **Option 2: Use PRs Only for Feature Work**
+- If your workflow prefers PR tracking in projects:
+  - Don’t add issues.
+  - Add only PRs and manage their progress (e.g., add statuses like "In Review", "Ready to Merge").
+- Issues are just "discussion" or "planning", and you close them via PRs, but don’t track them on the board.
+
+---
+
+### **Option 3: Use Automation to Sync**
+You can automate this using **GitHub Actions** or manually with project fields:
+
+- If a PR is merged and it closes an issue → auto-move both PR and issue to “Done” (using rules or GitHub Actions).
+- Use the `linked pull requests` field to connect them visually.
+
+---
+
+### 👇 Example of PR Closing Issue and Reducing Duplication
+
+#### 1. Create an issue:
+```markdown
+Implement Beam ComboBox selection logic
+```
+
+#### 2. In the PR:
+```markdown
+### Changes
+- ComboBox now shows `Title`, assigns `Dim3`
+- Delay added after update using `BeamItem_Reset_Delay`
+
+Closes #45
+```
+
+#### 3. In the project:
+- Only add issue #45
+- When PR is merged → issue #45 is closed → project updates → **no duplicate PR card needed**
+
+---
+
+## ✨ Tips to Keep It Clean
+
+| Action | Result |
+|--------|--------|
+| Use `Closes #issue` in PR | Auto closes issue when PR is merged |
+| Avoid manually adding both issue and PR to the project | Prevents duplicate tracking |
+| Use automation rules in GitHub Project (Beta) | Keeps board clean and synced |
+| Consider using only one of Issue or PR for tracking | Depends on your team workflow |
+
+---
+
+
 

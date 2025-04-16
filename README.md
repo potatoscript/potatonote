@@ -143,5 +143,23 @@ Closes #45
 
 ---
 
+## ✅ **To auto-close an issue when a pull request is merged:**
 
+You need to include a special **closing keyword** followed by the issue number in either:
+
+- The **pull request description**, or  
+- A **commit message** (that’s part of the PR and gets merged into the default branch).
+
+---
+
+### ✅ Valid keywords include:
+- `Closes #123`
+- `Fixes #123`
+- `Resolves #123`
+
+Where `#123` is your issue number.
+
+> ❗️Just referencing the issue number (like `#123`) without one of the keywords will **not** close the issue.
+
+---
 

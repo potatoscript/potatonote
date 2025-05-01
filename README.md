@@ -163,3 +163,59 @@ Where `#123` is your issue number.
 
 ---
 
+
+### 🔧 Try These Steps to Force Kill It
+
+#### ✅ 1. Use Command Line (force kill)
+Open **Command Prompt as Administrator** and run:
+
+```bash
+taskkill /F /IM Fw.exe
+```
+
+- `/F` = force termination
+- `/IM` = image name
+
+If it says "Access Denied" or doesn't kill it, continue below.
+
+---
+
+#### ✅ 2. Kill by PID (process ID)
+Since your error shows the PID (`13948`), you can kill it directly:
+
+```bash
+taskkill /F /PID 13948
+```
+
+Replace `13948` with whatever PID you see in Task Manager.
+
+---
+
+#### ✅ 3. Use PowerShell (admin)
+```powershell
+Stop-Process -Name Fw -Force
+```
+
+Or:
+
+```powershell
+Stop-Process -Id 13948 -Force
+```
+
+---
+
+#### ✅ 4. Restart `explorer.exe` (if it's a system file lock)
+Sometimes shell processes hold it — restart Explorer:
+
+```bash
+taskkill /F /IM explorer.exe
+start explorer.exe
+```
+
+---
+
+#### ✅ 5. Reboot (last resort)
+If nothing else works, just reboot the PC to unlock the file.
+
+---
+

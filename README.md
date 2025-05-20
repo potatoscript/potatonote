@@ -1,17 +1,32 @@
-## 🥔 To load data and bind to UI instance 
+## 🥔 CREATE (To Add/Insert data)  
+```csharp
+var newItem = new EnvAxbimuModel
+{
+    Title = "AX11-14",
+    Spec = TableControl.TitleLabel.Content.ToString(),
+    Dim1 = 1120,
+    Space = "～",
+    Dim2 = 1460,
+    Deleteable = 1
+};
+await viewModel.AddtoTempDatabase(new List<EnvAxbimuModel> { newItem });
+```
+
+
+## 🥔 READ (To load data and bind to UI instance) 
 ```csharp
 var items = await viewModelCommon.LoadTableDataAsync(item => item.Id == 1);
 Thickness.DataContext = new ObservableCollection<EnvAxbimuCommonModel>(items);
 Qty.DataContext = new ObservableCollection<EnvAxbimuCommonModel>(items);
 ```
 
-## 🥔 To load data and display on DataGrid 
+## 🥔 READ (To load data and display on DataGrid) 
 ```csharp
 Expression<Func<EnvAxbimuModel, bool>> filter = item => item.Deleteable != -1;
 await TableControl.LoadDataToTable(filter);
 ```
 
-## 🥔 To Update database with Dictionary
+## 🥔 UPDATE (To Update database with Dictionary)
 ```csharp
 var updatedValues = new Dictionary<string, object>
 {
@@ -24,7 +39,7 @@ var conditions = new Dictionary<string, object>
 await DbHelper.UpdateDatabase<EnvAxbimuCommonModel>(updatedValues, conditions, "potato");
 ```
 
-## 🥔 To Update database with Dictionary at the DataGrid
+## 🥔 UPDATE (To Update database with Dictionary at the DataGrid)
 ```csharp
 private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
 {
@@ -43,22 +58,7 @@ private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
 }
 ```
 
-## 🥔 To Add/Insert data  
-```csharp
-var newItem = new EnvAxbimuModel
-{
-    Title = "AX11-14",
-    Spec = TableControl.TitleLabel.Content.ToString(),
-    Dim1 = 1120,
-    Space = "～",
-    Dim2 = 1460,
-    Deleteable = 1
-};
-await viewModel.AddtoTempDatabase(new List<EnvAxbimuModel> { newItem });
-```
-
-
-## 🥔 To Delete data  
+## 🥔 DELETE (To Delete data)  
 ```csharp
 if (TableControl.deleteParameter is EnvAxbimuModel selectedItem)
 {

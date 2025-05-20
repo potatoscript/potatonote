@@ -1,8 +1,24 @@
+# 🥔 To load data and bind to UI instance 
+```csharp
+var items = await viewModelCommon.LoadTableDataAsync(item => item.Id == 1);
+Thickness.DataContext = new ObservableCollection<EnvAxbimuCommonModel>(items);
+Qty.DataContext = new ObservableCollection<EnvAxbimuCommonModel>(items);
+```
+
+# 🥔 To load data and display on DataGrid 
+```csharp
+Expression<Func<EnvAxbimuModel, bool>> filter = item => item.Deleteable != -1;
+await TableControl.LoadDataToTable(filter);
+```
+
+
+
+---
+
 # 🚀 機能開発ワークフローガイド（GitHub + Projects）
 
 このガイドでは、GitHub の **Issues、ブランチ、Projects** を活用して機能開発を管理するための **ステップバイステップの手順** を解説します。
 
----
 
 ## ✅ 1. フィーチャーブランチの作成とリモートへのプッシュ
 

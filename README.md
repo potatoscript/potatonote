@@ -1,16 +1,71 @@
-# 🥔 To load data and bind to UI instance 
+## 🥔 To load data and bind to UI instance 
 ```csharp
 var items = await viewModelCommon.LoadTableDataAsync(item => item.Id == 1);
 Thickness.DataContext = new ObservableCollection<EnvAxbimuCommonModel>(items);
 Qty.DataContext = new ObservableCollection<EnvAxbimuCommonModel>(items);
 ```
 
-# 🥔 To load data and display on DataGrid 
+## 🥔 To load data and display on DataGrid 
 ```csharp
 Expression<Func<EnvAxbimuModel, bool>> filter = item => item.Deleteable != -1;
 await TableControl.LoadDataToTable(filter);
 ```
 
+## 🥔 To Update database with Dictionary
+```csharp
+var updatedValues = new Dictionary<string, object>
+{
+    { textBox.Name, textBox.Text }
+};
+var conditions = new Dictionary<string, object>
+{
+    { "Id", 1 }
+};
+await DbHelper.UpdateDatabase<EnvAxbimuCommonModel>(updatedValues, conditions, "potato");
+```
+
+## 🥔 To Update database with Dictionary at the DataGrid
+```csharp
+private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+{
+    try
+    {
+        if (sender is TextBox textBox)
+        {
+            var items = TableControl.DataGrid.ItemsSource as List<EnvAxbimuModel>;
+            TextBoxHelper.HandleTextChanged(textBox, items, viewModel.UpdateTempDatabase);
+        }
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show($"Error updating JSON file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+}
+```
+
+## 🥔 To Add/Insert data  
+```csharp
+var newItem = new EnvAxbimuModel
+{
+    Title = "AX11-14",
+    Spec = TableControl.TitleLabel.Content.ToString(),
+    Dim1 = 1120,
+    Space = "～",
+    Dim2 = 1460,
+    Deleteable = 1
+};
+await viewModel.AddtoTempDatabase(new List<EnvAxbimuModel> { newItem });
+```
+
+
+## 🥔 To Delete data  
+```csharp
+if (TableControl.deleteParameter is EnvAxbimuModel selectedItem)
+{
+    await viewModel.RemoveDataFromTempDatabaseAsync(selectedItem);
+    await LoadDataToTable();
+}
+```
 
 
 ---

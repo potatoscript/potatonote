@@ -1,3 +1,60 @@
+## 🧠　ConfigureAwait(true)
+
+### ✅ When to use `ConfigureAwait(true)` (or omit it)
+
+Use it when **you need to interact with the UI or other context-sensitive resources after the `await`**.
+
+#### 🔧 Example – WPF/WinForms UI update
+
+```csharp
+private async void Button_Click(object sender, EventArgs e)
+{
+    // Runs on the UI thread
+    var data = await GetDataAsync(); // ConfigureAwait(true) is implied
+
+    // UI update — MUST run on the UI thread
+    myLabel.Text = data;
+}
+```
+
+If you had used `ConfigureAwait(false)` here, the `myLabel.Text = data;` line might throw an exception or silently fail because it’s not running on the UI thread.
+
+---
+
+### ❌ Don’t use `ConfigureAwait(false)` if...
+
+* You need to access:
+
+  * UI controls (`Label`, `TextBox`, `Canvas`, etc.)
+  * SynchronizationContext-bound services (like ASP.NET legacy `HttpContext`)
+* You're writing code inside a **UI layer** (WPF, WinForms, Xamarin, MAUI)
+
+---
+
+### 🧠 Summary Table
+
+| Context                 | Use `ConfigureAwait(false)` | Use `ConfigureAwait(true)` (or omit) |
+| ----------------------- | --------------------------- | ------------------------------------ |
+| UI code (WPF, WinForms) | ❌ No                        | ✅ Yes                                |
+| Updating UI elements    | ❌ No                        | ✅ Yes                                |
+| Background service code | ✅ Yes                       | ❌ No                                 |
+| Library method (no UI)  | ✅ Yes                       | ❌ No                                 |
+| ASP.NET Core            | ✅ Yes                       | ❌ No (no SynchronizationContext)     |
+| ASP.NET (classic)       | ⚠️ Maybe                    | ⚠️ Maybe (depends on `HttpContext`)  |
+
+---
+
+### 🧪 Advanced Tip
+
+If you **accidentally use `ConfigureAwait(false)` in UI code**, you may get exceptions like:
+
+> `InvalidOperationException: The calling thread cannot access this object because a different thread owns it.`
+
+This happens because UI frameworks enforce **single-threaded UI access**, and you're trying to touch UI elements from a background thread.
+
+
+---
+
 ## 🥔 CREATE (To Add/Insert data)  
 ```csharp
 var newItem = new EnvAxbimuModel

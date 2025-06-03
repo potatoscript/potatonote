@@ -1,3 +1,18 @@
+## 🥔 Load data from Temporary Database
+
+```csharp
+private async Task<List<EnvToriaiSentakuModel>> LoadDatabaseDataToJsonAsync()
+{
+    Expression<Func<EnvToriaiSentakuModel, bool>> condition =
+        e => e.GroupName == group; 
+
+    return await viewModel.LoadDataFromDatabaseToTempDb<EnvToriaiSentakuModel>(condition);
+}
+```
+
+
+---
+
 ## 🧠　ConfigureAwait(true)
 
 ### ✅ When to use `ConfigureAwait(true)` (or omit it)

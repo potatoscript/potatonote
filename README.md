@@ -1,7 +1,5 @@
 ## 🔗 [Setup Connection to Azure PostgreSQL in VS Code](https://github.com/heartlanguage2024/heartlanguage2024/wiki/20250604-(水)-Setup-Connection-of-Azure-PostgreSQL-in-VS-Code)
 
-<br>
-
 ---
 
 ## 🥔 Load data from Temporary Database

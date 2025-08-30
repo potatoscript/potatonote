@@ -76,7 +76,7 @@ This happens because UI frameworks enforce **single-threaded UI access**, and yo
 
 ## 🥔 CREATE (To Add/Insert data)  
 ```csharp
-var newItem = new EnvAxbimuModel
+var newItem = new potatoModel
 {
     Title = "AX11-14",
     Spec = TableControl.TitleLabel.Content.ToString(),
@@ -85,20 +85,20 @@ var newItem = new EnvAxbimuModel
     Dim2 = 1460,
     Deleteable = 1
 };
-await viewModel.AddtoTempDatabase(new List<EnvAxbimuModel> { newItem });
+await viewModel.AddtoTempDatabase(new List<potatoModel> { newItem });
 ```
 
 
 ## 🥔 READ (To load data and bind to UI instance) 
 ```csharp
 var items = await viewModelCommon.LoadTableDataAsync(item => item.Id == 1);
-Thickness.DataContext = new ObservableCollection<EnvAxbimuCommonModel>(items);
-Qty.DataContext = new ObservableCollection<EnvAxbimuCommonModel>(items);
+Thickness.DataContext = new ObservableCollection<potatoModel>(items);
+Qty.DataContext = new ObservableCollection<potatoModel>(items);
 ```
 
 ## 🥔 READ (To load data and display on DataGrid) 
 ```csharp
-Expression<Func<EnvAxbimuModel, bool>> filter = item => item.Deleteable != -1;
+Expression<Func<potatoModel, bool>> filter = item => item.Deleteable != -1;
 await TableControl.LoadDataToTable(filter);
 ```
 
@@ -112,7 +112,7 @@ var conditions = new Dictionary<string, object>
 {
     { "Id", 1 }
 };
-await DbHelper.UpdateDatabase<EnvAxbimuCommonModel>(updatedValues, conditions, "potato");
+await DbHelper.UpdateDatabase<potatoModel>(updatedValues, conditions, "potato");
 ```
 
 ## 🥔 UPDATE (To Update database with Dictionary at the DataGrid)
@@ -123,7 +123,7 @@ private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         if (sender is TextBox textBox)
         {
-            var items = TableControl.DataGrid.ItemsSource as List<EnvAxbimuModel>;
+            var items = TableControl.DataGrid.ItemsSource as List<potatoModel>;
             TextBoxHelper.HandleTextChanged(textBox, items, viewModel.UpdateTempDatabase);
         }
     }
@@ -136,7 +136,7 @@ private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
 
 ## 🥔 DELETE (To Delete data)  
 ```csharp
-if (TableControl.deleteParameter is EnvAxbimuModel selectedItem)
+if (TableControl.deleteParameter is potatoModel selectedItem)
 {
     await viewModel.RemoveDataFromTempDatabaseAsync(selectedItem);
     await LoadDataToTable();

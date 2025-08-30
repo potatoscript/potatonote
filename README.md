@@ -5,12 +5,12 @@
 ## 🥔 Load data from Temporary Database
 
 ```csharp
-private async Task<List<EnvToriaiSentakuModel>> LoadDatabaseDataToJsonAsync()
+private async Task<List<potatoModel>> LoadDatabaseDataToJsonAsync()
 {
-    Expression<Func<EnvToriaiSentakuModel, bool>> condition =
+    Expression<Func<potatoModel, bool>> condition =
         e => e.GroupName == group; 
 
-    return await viewModel.LoadDataFromDatabaseToTempDb<EnvToriaiSentakuModel>(condition);
+    return await viewModel.LoadDataFromDatabaseToTempDb<potatoModel>(condition);
 }
 ```
 
